@@ -30,37 +30,37 @@ mensajeNoEncontrado: .asciiz "No encontrado. \n"
 main:
 	la $t0, schedv
 	la $t1, newcategory
-	sw $t1, 0($t0)              # Opción 1: Nueva categoría
+	sw $t1, 0($t0)              
 
 	la $t1, siguienteCategoria
-	sw $t1, 4($t0)              # Opción 2: Siguiente categoría
+	sw $t1, 4($t0)              
 
 	la $t1, categoriaAnterior
-	sw $t1, 8($t0)              # Opción 3: Categoría anterior
+	sw $t1, 8($t0)              
 
 	la $t1, listarCategorias
-	sw $t1, 12($t0)             # Opción 4: Listar categorías
+	sw $t1, 12($t0)             
 
 	la $t1, eliminarCategoria
-	sw $t1, 16($t0)             # Opción 5: Borrar categoría
+	sw $t1, 16($t0)             
 
 	la $t1, nuevoObjeto
-	sw $t1, 20($t0)             # Opción 6: Añadir objeto
+	sw $t1, 20($t0)             
 
 	la $t1, listarObjetos
-	sw $t1, 24($t0)             # Opción 7: Listar objetos
+	sw $t1, 24($t0)             
 
 	la $t1, eliminarObjeto
-	sw $t1, 28($t0)             # Opción 8: Borrar objeto
+	sw $t1, 28($t0)             
 
 menuBucle:
-    	la $a0, menu # Mostrar el menú
+    	la $a0, menu #Mostrar el menú
     	li $v0, 4
     	syscall
     	
     	li $v0, 5 #Para que el usuario ingrese la opcion
     	syscall
-    	move $t2, $v0 # Guardar opción en $t2
+    	move $t2, $v0 #Guardar opción en $t2
 
     	beqz $t2, exit #Para que el rango de opciones sea entre 1 y 8
     	li $t3, 1
@@ -68,24 +68,24 @@ menuBucle:
     	li $t3, 8
     	bgt $t2, $t3, opcionInvalida
 
-    	subi $t2, $t2, 1 # Calcular la posición en schedv (opción - 1) * 4
+    	subi $t2, $t2, 1 #Calcular la posición en schedv (opción - 1) * 4
     	sll $t2, $t2, 2
     	la $t0, schedv
-    	add $t0, $t0, $t2  # $t0 ahora tiene la dirección de la función en schedv
+    	add $t0, $t0, $t2  #$t0 ahora tiene la dirección de la función en schedv
 
-    	lw $t1, 0($t0) # Llamo a la funcion a través de la dirección guardada en $t0
-    	jalr $t1                 # Saltar a la funcion correspondiente
+    	lw $t1, 0($t0) #Llamo a la funcion a través de la dirección guardada en $t0
+    	jalr $t1  #Saltar a la funcion correspondiente
 
-    	j menuBucle # Luego de elegir la opcion, vuelvo al bucle del menú
+    	j menuBucle #Vuelvo al menú
 
-opcionInvalida: # Para imprimir mensaje de opción inválida
+opcionInvalida: #Para imprimir mensaje de opción inválida
     	la $a0, invalid_option
     	li $v0, 4
     	syscall
-    	j menuBucle                # Vuelvo al menú
+    	j menuBucle  #Vuelvo al menú
 
 newcategory:
-	addiu $sp, $sp, -4 #reserva word en stack
+	addiu $sp, $sp, -4 
 	sw $ra, 4($sp)	   	
 	la $a0, catName    # input category name, en el argumento $a0 para poder imprimirlo
 	jal getblock
